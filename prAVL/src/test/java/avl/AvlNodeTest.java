@@ -1,12 +1,10 @@
 package avl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.springframework.test.util.AssertionErrors.*;
 
 /**
  * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 09/07/13 Time: 15:29
@@ -15,12 +13,12 @@ public class AvlNodeTest {
 
   private AvlNode<Integer> node;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     node = new AvlNode<Integer>(5);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     node = null;
   }

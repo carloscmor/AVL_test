@@ -1,14 +1,13 @@
 package avl;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.springframework.test.util.AssertionErrors.*;
 
 /**
  * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13
@@ -18,13 +17,13 @@ public class AvlTreeTest {
   AvlTree<Integer> avlTree;
   Comparator<?> comparator;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     comparator = Comparator.comparingInt((Integer o) -> o);
     avlTree = new AvlTree(comparator);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     avlTree = null;
     comparator = null;
