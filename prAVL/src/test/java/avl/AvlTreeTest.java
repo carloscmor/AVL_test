@@ -16,7 +16,7 @@ import org.junit.Test;
 public class AvlTreeTest {
 
   AvlTree<Integer> avlTree;
-  Comparator<?> comparator;
+  Comparator<Integer> comparator;
 
   @Before
   public void setUp()  {

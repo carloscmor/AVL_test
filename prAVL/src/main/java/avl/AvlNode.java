@@ -38,8 +38,6 @@ public class AvlNode<T> {
 
   /**
    * Constructor
-   *
-   * @param item
    */
   public AvlNode(T item) {
     this.left = null;
