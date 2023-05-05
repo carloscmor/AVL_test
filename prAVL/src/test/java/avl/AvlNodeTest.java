@@ -16,19 +16,19 @@ public class AvlNodeTest {
   private AvlNode<Integer> node;
 
   @Before
-  public void setUp() throws Exception {
-    node = new AvlNode<Integer>(5);
+  public void setUp() {
+    node = new AvlNode<>(5);
   }
 
   @After
-  public void tearDown() throws Exception {
+  public void tearDown() {
     node = null;
   }
 
   @Test
   public void testHasLeft() {
     assertFalse("testHasLeft", node.hasLeft());
-    AvlNode<Integer> node2 = new AvlNode<Integer>(6);
+    AvlNode<Integer> node2 = new AvlNode<>(6);
     node.setLeft(node2);
     assertTrue("testHasLeft", node.hasLeft());
   }
@@ -36,7 +36,7 @@ public class AvlNodeTest {
   @Test
   public void testHasRight() {
     assertFalse("testHasRight", node.hasRight());
-    AvlNode<Integer> node2 = new AvlNode<Integer>(6);
+    AvlNode<Integer> node2 = new AvlNode<>(6);
     node.setRight(node2);
     assertTrue("testHasRight", node.hasRight());
   }
