@@ -1,16 +1,11 @@
 package avl;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.springframework.test.util.AssertionErrors.*;
 
 /**
  * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 09/07/13 Time: 15:29
- *
- * Refactor made by:
  * Refactor made by:
  * @author Carlos Castaño Moreno
  * @author Daniel García Rodríguez
@@ -31,22 +26,39 @@ public class AvlNodeTest {
     node = null;
   }
 
-  @Test
+  @Nested
   @DisplayName("Test that checks if a node has a left side or not")
-  public void testHasLeft() {
-    assertFalse("testHasLeft", node.hasLeft());
-    AvlNode<Integer> node2 = new AvlNode<>(6);
-    node.setLeft(node2);
-    assertTrue("testHasLeft", node.hasLeft());
+  class leftSide {
+    @Test
+    @DisplayName("The node has left side")
+    public void hasLeft() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setLeft(node2);
+      assertTrue("testHasLeft", node.hasLeft());
+    }
+    @Test
+    @DisplayName("The node does not have left side")
+    public void doesNotHaveLeft() {
+      assertFalse("testHasLeft", node.hasLeft());
+    }
   }
 
-  @Test
+  @Nested
   @DisplayName("Test that checks if a node has a right side or not")
-  public void testHasRight() {
-    assertFalse("testHasRight", node.hasRight());
-    AvlNode<Integer> node2 = new AvlNode<>(6);
-    node.setRight(node2);
-    assertTrue("testHasRight", node.hasRight());
+  class rightSide {
+    @Test
+    @DisplayName("The node has right side")
+    public void testHasRight() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setRight(node2);
+      assertTrue("testHasRight", node.hasRight());
+    }
+
+    @Test
+    @DisplayName("The node does not have right side")
+    public void testHasNoRight() {
+      assertFalse("testHasRight", node.hasRight());
+    }
   }
 
   @Test
@@ -56,5 +68,4 @@ public class AvlNodeTest {
     node.setHeight(expectedHeight);
     assertEquals("Height is different from expected.", expectedHeight, node.getHeight());
   }
-
 }

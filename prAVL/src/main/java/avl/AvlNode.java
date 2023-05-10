@@ -55,7 +55,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method gets the left node
+   * Get the left node
    * @return left
    */
   public AvlNode<T> getLeft() {
@@ -63,7 +63,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method sets the left node
+   * Set the left node
    * @param left
    */
   public void setLeft(AvlNode<T> left) {
@@ -71,7 +71,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method gets the parent node
+   * Get the parent node
    * @return parent
    */
   public AvlNode<T> getParent() {
@@ -79,7 +79,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method sets the parent node
+   * Set the parent node
    * @param parent
    */
   public void setParent(AvlNode<T> parent) {
@@ -87,7 +87,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method gets the right node
+   * Get the right node
    * @return right
    */
   public AvlNode<T> getRight() {
@@ -95,7 +95,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method sets the right node
+   * Set the right node
    * @param right
    */
   public void setRight(AvlNode<T> right) {
@@ -103,7 +103,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method gets the item of the node
+   * Get the item of the node
    * @return item
    */
   public T getItem() {
@@ -111,7 +111,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method sets the item of the node
+   * Set the item of the node
    * @param item
    */
   public void setItem(T item) {
@@ -119,7 +119,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method gets the height where the node is
+   * Get the height where the node is
    * @return height
    */
   public int getHeight() {
@@ -127,7 +127,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method sets the height of the node
+   * Set the height of the node
    * @param height
    */
   public void setHeight(int height) {
@@ -135,7 +135,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method updates the height of a node, depending on current connections
+   * Update the height of a node, depending on current connections
    */
   public void updateHeight() {
     if (!hasLeft() && !hasRight()) height = 0;
@@ -145,7 +145,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method gets the closest node
+   * Get the closest node
    * @return closestNode
    */
   public AvlNode<T> getClosestNode() {
@@ -153,7 +153,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method sets the closest node
+   * Set the closest node
    * @param closestNode
    */
   public void setClosestNode(AvlNode<T> closestNode) {
@@ -161,7 +161,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method checks whether the node has a parent
+   * Check whether the node has a parent
    * @return parent != null
    */
   public boolean hasParent() {
@@ -169,7 +169,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method checks whether the node has a left child node or not
+   * Check whether the node has a left child node or not
    * @return left != null
    */
   public boolean hasLeft() {
@@ -177,7 +177,7 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method checks whether the node has a right node
+   * Check whether the node has a right node
    * @return right != null
    */
   public boolean hasRight() {
@@ -185,24 +185,24 @@ public class AvlNode<T> {
   }
 
   /**
-   * This method checks wether the node is leaf or not
-   * @return
+   * Check wether the node is leaf or not
+   * @return true if the node doesn't have a left and right child, false otherwise
    */
   public boolean isLeaf() {
     return (!hasLeft() && !hasRight());
   }
 
   /**
-   * This method checks whether a node has only a left child
-   * @return(hasLeft() && !hasRight())
+   * Check whether a node has only a left child
+   * @return true if only has a left child, false otherwise
    */
   public boolean hasOnlyALeftChild() {
     return (hasLeft() && !hasRight());
   }
 
   /**
-   * This method checks whether a node has only a right child
-   * @return(hasRight() && !hasLeft())
+   * Check whether a node has only a right child
+   * @return true if only has a right child, false otherwise
    */
   public boolean hasOnlyARightChild() {
     return (hasRight() && !hasLeft());
