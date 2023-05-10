@@ -92,15 +92,10 @@ public class AvlNode<T> {
   }
 
   public void updateHeight() {
-    if (!hasLeft() && !hasRight()) {
-      height = 0;
-    } else if (!hasRight()) {
-      height = 1 + getLeft().getHeight();
-    } else if (!hasLeft()) {
-      height = 1 + getRight().getHeight();
-    } else {
-      height = 1 + Math.max(getLeft().getHeight(), getRight().getHeight());
-    }
+    if (!hasLeft() && !hasRight()) height = 0;
+    else if (!hasRight()) height = 1 + getLeft().getHeight();
+    else if (!hasLeft()) height = 1 + getRight().getHeight();
+    else height = 1 + Math.max(getLeft().getHeight(), getRight().getHeight());
   }
 
   public AvlNode<T> getClosestNode() {
@@ -124,7 +119,6 @@ public class AvlNode<T> {
   }
 
   public boolean isLeaf() {
-
     return (!hasLeft() && !hasRight());
   }
 
