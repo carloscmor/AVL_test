@@ -27,6 +27,11 @@ import java.util.Comparator;
 /**
  * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:51 Class implementing
  * Avl trees.
+ * Refactor made by:
+ * @author Carlos Castaño Moreno
+ * @author Daniel García Rodríguez
+ * @author María Fernández Moreno
+ * @author Nuria Rodríguez Tortosa
  */
 public class AvlTree<T> {
 
