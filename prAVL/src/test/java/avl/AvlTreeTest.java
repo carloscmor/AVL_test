@@ -124,6 +124,7 @@ public class AvlTreeTest {
 
 
     @Test
+    @DisplayName("Test than checks ")
     public void testSearchClosestNode() {
         int result;
         AvlNode<Integer> node = new AvlNode<>(7);
@@ -156,6 +157,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that checks that you can insert a right element correctly")
     public void testInsertingRightElement() {
         AvlNode<Integer> node = new AvlNode<>(6);
         avlTree.insertAvlNode(node);
@@ -331,6 +333,7 @@ public class AvlTreeTest {
      * Testing adding 7 - 4 - 3 - 2 - 1
      */
     @Test
+
     public void testInserting7_8_9_10_11() {
         AvlNode<Integer> node1, node2, node3, node4, node5;
 
@@ -363,6 +366,7 @@ public class AvlTreeTest {
      * Testing adding 7 - 2 - 3
      */
     @Test
+    @DisplayName("Test that checks that you can insert a left-right nodes and the tree will keep balance")
     public void testInsertingLeftRightNodeAndRebalance() {
         AvlNode<Integer> node1, node2, node3;
 
@@ -397,6 +401,7 @@ public class AvlTreeTest {
      * Testing adding 7 - 9 - 8
      */
     @Test
+    @DisplayName("Test that checks that you can insert a rigth-left nodes and the tree will keep balance")
     public void testInsertingRightLeftNodeAndRebalance() {
         AvlNode<Integer> node1, node2, node3;
 
@@ -428,6 +433,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that checks that the method search works correctly")
     public void testSearchNode() {
         AvlNode<Integer> node1, node2, node3, node4, node5;
 
@@ -461,6 +467,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that finds the successor")
     public void testFindSuccessor() {
         AvlNode<Integer> node;
 
@@ -500,6 +507,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that checks that you can delete leaf nodes correctly")
     public void testDeletingLeafNodes() {
         AvlNode<Integer> node1, node2, node3, node4, node5;
 
@@ -549,6 +557,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that checks that you can delete nodes that only have one leaf")
     public void testDeletingNodesWithOneLeaf() {
         AvlNode<Integer> node1, node2, node3, node4, node5;
 
@@ -586,6 +595,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that checks that you can delete nodes with two leaves correctly")
     public void testDeletingNodesWithTwoLeaves() {
         AvlNode<Integer> node;
 
@@ -629,6 +639,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that checks that you can delete nodes and the tree will keep balanced")
     public void testDeletingAndRebalancing() {
         AvlNode<Integer> node;
 
@@ -665,6 +676,7 @@ public class AvlTreeTest {
     }
 
     @Test
+    @DisplayName("Test that checks that you can delete a top node correctly")
     public void testDeletingTopNode() {
         AvlNode<Integer> node;
 

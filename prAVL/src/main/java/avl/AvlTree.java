@@ -36,44 +36,45 @@ import java.util.Comparator;
 public class AvlTree<T> {
 
   AvlNode<T> top;
-  Comparator comparator;
+  Comparator<T> comparator;
 
   /**
    * Constructor
-   *
-   * @param comparator
    */
-  public AvlTree(Comparator comparator) {
+  public AvlTree(Comparator<T> comparator) {
     top = null;
     this.comparator = comparator;
   }
 
+  /**
+   *
+   * @param item
+   */
   public void insert(T item) {
-    AvlNode<T> node = new AvlNode<T>(item);
+    AvlNode<T> node = new AvlNode<>(item);
     insertAvlNode(node);
   }
 
+  /**
+   * {@link }
+   * @param node
+   */
   public void insertAvlNode(AvlNode<T> node) {
-    if (avlIsEmpty()) {
-      insertTop(node);
-    } else {
+    if (avlIsEmpty()) insertTop(node);
+    else {
       int result = searchClosestNode(node);
 
       switch (result) {
-        case -1:
-          insertNodeLeft(node);
-          break;
-        case +1:
-          insertNodeRight(node);
-          break;
-        default:
-          break;
+        case -1 -> insertNodeLeft(node);
+        case +1 -> insertNodeRight(node);
+        default -> {
+        }
       }
     }
   }
 
   public AvlNode<T> search(T item) {
-    AvlNode<T> node = new AvlNode<T>(item);
+    AvlNode<T> node = new AvlNode<>(item);
     return searchNode(node);
   }
 
@@ -82,28 +83,18 @@ public class AvlTree<T> {
     AvlNode<T> result = null;
 
     currentNode = top;
-    if (top == null) {
-      result = null;
-    } else {
+    if (top != null) {
       boolean searchFinished;
       int comparison;
       searchFinished = false;
       while (!searchFinished) {
         comparison = compareNodes(targetNode, currentNode);
         if (comparison < 0) {
-          if (currentNode.getLeft() != null) {
-            currentNode = currentNode.getLeft();
-          } else {
-            searchFinished = true;
-            result = null;
-          }
+          if (currentNode.getLeft() != null) currentNode = currentNode.getLeft();
+          else searchFinished = true;
         } else if (comparison > 0) {
-          if (currentNode.getRight() != null) {
-            currentNode = currentNode.getRight();
-          } else {
-            searchFinished = true;
-            result = null;
-          }
+          if (currentNode.getRight() != null) currentNode = currentNode.getRight();
+          else searchFinished = true;
         } else {
           searchFinished = true;
           result = currentNode;
@@ -114,7 +105,7 @@ public class AvlTree<T> {
   }
 
   public void delete(T item) {
-    deleteNode(new AvlNode<T>(item));
+    deleteNode(new AvlNode<>(item));
   }
 
   public void deleteNode(AvlNode<T> node) {
@@ -122,51 +113,39 @@ public class AvlTree<T> {
 
     nodeFound = searchNode(node);
     if (nodeFound != null) {
-      if (nodeFound.isLeaf()) {
-        deleteLeafNode(nodeFound);
-      } else if (nodeFound.hasOnlyALeftChild()) {
-        deleteNodeWithALeftChild(nodeFound);
-      } else if (nodeFound.hasOnlyARightChild()) {
-        deleteNodeWithARightChild(nodeFound);
-      } else { // has two children
+      if (nodeFound.isLeaf()) deleteLeafNode(nodeFound);
+      else if (nodeFound.hasOnlyALeftChild()) deleteNodeWithALeftChild(nodeFound);
+      else if (nodeFound.hasOnlyARightChild()) deleteNodeWithARightChild(nodeFound);
+      else { // has two children
         AvlNode<T> successor = findSuccessor(nodeFound);
         T tmp = successor.getItem();
         successor.setItem(nodeFound.getItem());
         nodeFound.setItem(tmp);
-        if (successor.isLeaf()) {
-          deleteLeafNode(successor);
-        } else if (successor.hasOnlyALeftChild()) {
-          deleteNodeWithALeftChild(successor);
-        } else if (successor.hasOnlyARightChild()) {
-          deleteNodeWithARightChild(successor);
-        }
+        if (successor.isLeaf()) deleteLeafNode(successor);
+        else if (successor.hasOnlyALeftChild()) deleteNodeWithALeftChild(successor);
+        else if (successor.hasOnlyARightChild()) deleteNodeWithARightChild(successor);
       }
     }
   }
 
   public void deleteLeafNode(AvlNode<T> node) {
-    if (!node.hasParent()) {
-      top = null;
-    } else {
-      if (node.getParent().getLeft() == node) {
-        node.getParent().setLeft(null);
-      } else {
-        node.getParent().setRight(null);
-      }
+    if (node.hasParent()) {
+      if (node.getParent().getLeft() == node) node.getParent().setLeft(null);
+      else node.getParent().setRight(null);
       node.getParent().updateHeight();
       rebalance(node.getParent());
-    }
+    } else top = null;
   }
 
   public void deleteNodeWithALeftChild(AvlNode<T> node) {
-    node.setItem((T) node.getLeft().getItem());
+    node.setItem(node.getLeft().getItem());
     node.setLeft(null);
     node.updateHeight();
     rebalance(node);
   }
 
   public void deleteNodeWithARightChild(AvlNode<T> node) {
-    node.setItem((T) node.getRight().getItem());
+    node.setItem(node.getRight().getItem());
     node.setRight(null);
     node.updateHeight();
     rebalance(node);
@@ -175,7 +154,6 @@ public class AvlTree<T> {
   /**
    * Searches for the closest node of the node passed as argument
    *
-   * @param node
    * @return -1 if node has to be inserted in the left, +1 if it must be inserted in the right, 0
    * otherwise
    */
@@ -184,25 +162,21 @@ public class AvlTree<T> {
     int result = 0;
 
     currentNode = top;
-    if (top == null) {
-      result = 0;
-    } else {
+    if (top != null) {
       int comparison;
       boolean notFound = true;
       while (notFound) {
         comparison = compareNodes(node, currentNode);
         if (comparison < 0) {
-          if (currentNode.hasLeft()) {
-            currentNode = currentNode.getLeft();
-          } else {
+          if (currentNode.hasLeft()) currentNode = currentNode.getLeft();
+          else {
             notFound = false;
             node.setClosestNode(currentNode);
             result = -1;
           }
         } else if (comparison > 0) {
-          if (currentNode.hasRight()) {
-            currentNode = currentNode.getRight();
-          } else {
+          if (currentNode.hasRight()) currentNode = currentNode.getRight();
+          else {
             notFound = false;
             node.setClosestNode(currentNode);
             result = 1;
@@ -210,7 +184,6 @@ public class AvlTree<T> {
         } else {
           notFound = false;
           node.setClosestNode(currentNode);
-          result = 0;
         }
       }
     }
@@ -223,14 +196,10 @@ public class AvlTree<T> {
 
     if (node.hasRight()) {
       AvlNode<T> tmp = node.getRight();
-      while (tmp.hasLeft()) {
-        tmp = tmp.getLeft();
-      }
+      while (tmp.hasLeft()) tmp = tmp.getLeft();
       result = tmp;
     } else {
-      while (node.hasParent() && (node.getParent().getRight() == node)) {
-        node = node.getParent();
-      }
+      while (node.hasParent() && (node.getParent().getRight() == node)) node = node.getParent();
       result = node.getParent();
     }
     return result;
@@ -239,7 +208,7 @@ public class AvlTree<T> {
   /**
    * Insert node in the left of its nearest node
    *
-   * @param node REQUIRES: a previous call to searchClosestNode(node)
+   * @param node REQUIRES: a previous call to {@link #searchClosestNode(AvlNode)}
    */
   public void insertNodeLeft(AvlNode<T> node) {
     node.getClosestNode().setLeft(node);
@@ -250,7 +219,7 @@ public class AvlTree<T> {
   /**
    * Insert node in the right of its nearest node
    *
-   * @param node REQUIRES: a previous call to searchClosestNode(node)
+   * @param node <b>REQUIRES:</b> a previous call to {@link #searchClosestNode(AvlNode)}
    */
   public void insertNodeRight(AvlNode<T> node) {
     node.getClosestNode().setRight(node);
@@ -261,8 +230,6 @@ public class AvlTree<T> {
   /**
    * Comparator
    *
-   * @param node1
-   * @param node2
    * @return The experimentoutput of the comparison according to the comparators
    */
   public int compareNodes(AvlNode<T> node1, AvlNode<T> node2) {
@@ -278,19 +245,15 @@ public class AvlTree<T> {
 
     while (notFinished) {
       if (getBalance(currentNode) == -2) {
-        if (height(currentNode.getLeft().getLeft()) >= height(currentNode.getLeft().getRight())) {
+        if (height(currentNode.getLeft().getLeft()) >= height(currentNode.getLeft().getRight()))
           leftRotation(currentNode);
-        } else {
-          doubleLeftRotation(currentNode);
-        }
+        else doubleLeftRotation(currentNode);
       }
 
       if (getBalance(currentNode) == 2) {
-        if (height(currentNode.getRight().getRight()) >= height(currentNode.getRight().getLeft())) {
+        if (height(currentNode.getRight().getRight()) >= height(currentNode.getRight().getLeft()))
           rightRotation(currentNode);
-        } else {
-          doubleRightRotation(currentNode);
-        }
+        else doubleRightRotation(currentNode);
       }
 
       if (currentNode.hasParent()) {
@@ -308,12 +271,10 @@ public class AvlTree<T> {
 
     if (node.hasParent()) {
       leftNode.setParent(node.getParent());
-      if (node.getParent().getLeft() == node) {
-        node.getParent().setLeft(leftNode);
-      } else {
-        node.getParent().setRight(leftNode);
-      }
+      if (node.getParent().getLeft() == node) node.getParent().setLeft(leftNode);
+      else node.getParent().setRight(leftNode);
     } else {
+      //noinspection SuspiciousNameCombination
       setTop(leftNode);
     }
 
@@ -330,12 +291,10 @@ public class AvlTree<T> {
 
     if (node.hasParent()) {
       rightNode.setParent(node.getParent());
-      if (node.getParent().getRight() == node) {
-        node.getParent().setRight(rightNode);
-      } else {
-        node.getParent().setLeft(rightNode);
-      }
+      if (node.getParent().getRight() == node) node.getParent().setRight(rightNode);
+      else node.getParent().setLeft(rightNode);
     } else {
+      //noinspection SuspiciousNameCombination
       setTop(rightNode);
     }
 
@@ -365,16 +324,8 @@ public class AvlTree<T> {
     int leftHeight;
     int rightHeight;
 
-    if (node.hasLeft()) {
-      leftHeight = node.getLeft().getHeight();
-    } else {
-      leftHeight = -1;
-    }
-    if (node.hasRight()) {
-      rightHeight = node.getRight().getHeight();
-    } else {
-      rightHeight = -1;
-    }
+    leftHeight = node.hasLeft() ? node.getLeft().getHeight() : -1;
+    rightHeight = node.hasRight() ? node.getRight().getHeight() : -1;
 
     return rightHeight - leftHeight;
   }
@@ -387,7 +338,6 @@ public class AvlTree<T> {
     top = node;
   }
 
-
   public AvlNode<T> getTop() {
     return top;
   }
@@ -398,30 +348,17 @@ public class AvlTree<T> {
   }
 
   public int height(AvlNode<T> node) {
-    int result = 0;
-    if (node == null) {
-      result = -1;
-    } else {
-      result = node.getHeight();
-    }
-
-    return result;
+    return node == null ? -1 : node.getHeight();
   }
 
   public String toString() {
-    String result;
-
-    result = inOrder(top);
-
-    return result;
+    return inOrder(top);
   }
 
   private String inOrder(AvlNode<T> node) {
-    String result;
-    if (node == null) {
-      return "";
-    } else {
-      result = " | " + node.getItem();
+    if (node == null) return "";
+    else {
+      String result = " | " + node.getItem();
       result += inOrder(node.getLeft());
       result += inOrder(node.getRight());
       return result;

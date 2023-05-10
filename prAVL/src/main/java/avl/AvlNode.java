@@ -43,59 +43,100 @@ public class AvlNode<T> {
 
   /**
    * Constructor
-   *
-   * @param item
    */
   public AvlNode(T item) {
     this.left = null;
     this.right = null;
     this.parent = null;
-    height = 0;
-    closestNode = null;
-
+    this.closestNode = null;
     this.item = item;
+
+    this.updateHeight();
   }
 
+  /**
+   * This method gets the left node
+   * @return left
+   */
   public AvlNode<T> getLeft() {
     return left;
   }
 
+  /**
+   * This method sets the left node
+   * @param left
+   */
   public void setLeft(AvlNode<T> left) {
     this.left = left;
   }
 
+  /**
+   * This method gets the parent node
+   * @return parent
+   */
   public AvlNode<T> getParent() {
     return parent;
   }
 
+  /**
+   * This method sets the parent node
+   * @param parent
+   */
   public void setParent(AvlNode<T> parent) {
     this.parent = parent;
   }
 
+  /**
+   * This method gets the right node
+   * @return right
+   */
   public AvlNode<T> getRight() {
     return right;
   }
 
+  /**
+   * This method sets the right node
+   * @param right
+   */
   public void setRight(AvlNode<T> right) {
     this.right = right;
   }
 
+  /**
+   * This method gets the item of the node
+   * @return item
+   */
   public T getItem() {
     return item;
   }
 
+  /**
+   * This method sets the item of the node
+   * @param item
+   */
   public void setItem(T item) {
     this.item = item;
   }
 
+  /**
+   * This method gets the height where the node is
+   * @return height
+   */
   public int getHeight() {
     return height;
   }
 
+  /**
+   * This method sets the height of the node
+   * @param height
+   */
   public void setHeight(int height) {
     this.height = height;
   }
 
+  /**
+   * This method updates the height of a node, depending on current connections
+   */
   public void updateHeight() {
     if (!hasLeft() && !hasRight()) height = 0;
     else if (!hasRight()) height = 1 + getLeft().getHeight();
@@ -103,34 +144,66 @@ public class AvlNode<T> {
     else height = 1 + Math.max(getLeft().getHeight(), getRight().getHeight());
   }
 
+  /**
+   * This method gets the closest node
+   * @return closestNode
+   */
   public AvlNode<T> getClosestNode() {
     return closestNode;
   }
 
+  /**
+   * This method sets the closest node
+   * @param closestNode
+   */
   public void setClosestNode(AvlNode<T> closestNode) {
     this.closestNode = closestNode;
   }
 
+  /**
+   * This method checks whether the node has a parent
+   * @return parent != null
+   */
   public boolean hasParent() {
     return parent != null;
   }
 
+  /**
+   * This method checks whether the node has a left child node or not
+   * @return left != null
+   */
   public boolean hasLeft() {
-    return left != null;
+    return  left != null;
   }
 
+  /**
+   * This method checks whether the node has a right node
+   * @return right != null
+   */
   public boolean hasRight() {
     return right != null;
   }
 
+  /**
+   * This method checks wether the node is leaf or not
+   * @return
+   */
   public boolean isLeaf() {
     return (!hasLeft() && !hasRight());
   }
 
+  /**
+   * This method checks whether a node has only a left child
+   * @return(hasLeft() && !hasRight())
+   */
   public boolean hasOnlyALeftChild() {
     return (hasLeft() && !hasRight());
   }
 
+  /**
+   * This method checks whether a node has only a right child
+   * @return(hasRight() && !hasLeft())
+   */
   public boolean hasOnlyARightChild() {
     return (hasRight() && !hasLeft());
   }
