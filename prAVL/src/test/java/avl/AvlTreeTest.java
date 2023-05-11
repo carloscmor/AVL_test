@@ -1,13 +1,13 @@
 package avl;
 
-
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Comparator;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.util.AssertionErrors.*;
+
 
 /**
  * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 09/07/13 Time: 15:29
@@ -34,26 +34,40 @@ public class AvlTreeTest {
         comparator = null;
     }
 
-    @Test
-    @DisplayName("Test that checks if a avlTree is empty or not")
-    public void testAvlIsEmpty() {
-        assertTrue("This test should return that the avlTree is empty", avlTree.avlIsEmpty());
+    @Nested
+    @DisplayName("When calling avlIsEmpty() method")
+    class EmptyMethodTest{
+        @Test
+        @DisplayName("it returns true if avlTree is empty")
+        void testAvlIsEmpty(){
+            assertTrue("This test should return that the avlTree is empty", avlTree.avlIsEmpty());
+        }
 
-        avlTree.insertTop(new AvlNode<>(5));
-        assertFalse("This test should return that the avlTree is not empty", avlTree.avlIsEmpty());
+        @Test
+        @DisplayName("it returns false if avlTree is not empty")
+        void testAvlIsNotEmpty(){
+            avlTree.insertTop(new AvlNode<>(5));
+            assertFalse("This test should return that the avlTree is not empty", avlTree.avlIsEmpty());
+        }
     }
 
-    @Test
-    @DisplayName("Test that checks that the element top is added correctly")
-    public void testInsertTop() {
-        //AvlNode<Integer> node = new AvlNode<>(4);
-        //avlTree.insertTop(node);
-        avlTree.insert(4);
-        AvlNode<Integer> node = avlTree.search(4);
-        assertEquals("This test should return the only node in a tree is the top", node, avlTree.getTop());
-        String tree = " | 4";
-        assertEquals("This test should return the only node inserted is the top", tree, avlTree.toString());
+    @Nested
+    @DisplayName("When inserting elements on avlTree")
+    class InsertElementTest{
+        @Test
+        @DisplayName("the element top is inserted correctly")
+        void testInsertTop() {
+            avlTree.insert(4);
+            AvlNode<Integer> node = avlTree.search(4);
+            assertEquals("This test should return the only node in a tree is the top", node, avlTree.getTop());
+            String tree = " | 4";
+            assertEquals( "This test should return the only node inserted is the top", tree, avlTree.toString());
+        }
+
+
     }
+
+
 
     @Test
     @DisplayName("Test that checks that the method compareNodes of a avlTree works correctly")
@@ -107,6 +121,15 @@ public class AvlTreeTest {
             String tree = " | 9";
             assertEquals("This test should return that node has an equal item to nodetwice", tree, avlTree.toString());
         }
+    }
+
+    @Test
+    @DisplayName("searching a node with no top means null is returned")
+    public void testWhenSearchingANodeWithNoTopTheResultIsNull(){
+        AvlTree<Integer> tree = new AvlTree<>(comparator);
+        AvlNode<Integer> node = new AvlNode<>(6);
+        assertNull("This test should return that you can't search a node in the tree becuase the top node is null",tree.searchNode(node));
+
     }
 
     @Test
@@ -283,12 +306,12 @@ public class AvlTreeTest {
         assertEquals("This test should return AvlNode's top height", 1, avlTree.getTop().getHeight());
         assertEquals("This test should return AvlNode's left tree's height", 0,
                 avlTree.getTop().getLeft().getHeight());
-        assertEquals("testInsertingLeftLeftNodeAndRebalance", 0,
+        assertEquals("This test should return that the height of the top node is 0", 0,
                 avlTree.getTop().getRight().getHeight());
-        assertEquals("testInsertingLeftLeftNodeAndRebalance", -1, avlTree.height(node1.getLeft()));
-        assertEquals("testInsertingLeftLeftNodeAndRebalance", -1, avlTree.height(node1.getRight()));
-        assertEquals("testInsertingLeftLeftNodeAndRebalance", -1, avlTree.height(node3.getLeft()));
-        assertEquals("testInsertingLeftLeftNodeAndRebalance", -1, avlTree.height(node3.getRight()));
+        assertEquals("This thest should return that the height of the left child of node1 is -1", -1, avlTree.height(node1.getLeft()));
+        assertEquals("This thest should return that the height of the right child of node1 is -1", -1, avlTree.height(node1.getRight()));
+        assertEquals("This thest should return that the height of the left child of node3 is -1", -1, avlTree.height(node3.getLeft()));
+        assertEquals("This thest should return that the height of the right child of node3 is -1", -1, avlTree.height(node3.getRight()));
 
         String tree = " | 4 | 3 | 7";
         assertEquals("This test should return that actual tree is | 4 | 3 | 7", tree, avlTree.toString());
@@ -304,31 +327,31 @@ public class AvlTreeTest {
 
         node1 = new AvlNode<>(7);
         avlTree.insertAvlNode(node1);
-        assertEquals("testInsertingRightRightNodeAndRebalance", 0, node1.getHeight());
-        assertEquals("testInsertingRightRightNodeAndRebalance", 0, avlTree.getBalance(node1));
+        assertEquals("This test should return that the height of node1 is 0", 0, node1.getHeight());
+        assertEquals("This test should return that the node1 is balanced", 0, avlTree.getBalance(node1));
 
         node2 = new AvlNode<>(10);
         avlTree.insertAvlNode(node2);
-        assertEquals("testInsertingRightRightNodeAndRebalance", 0, node2.getHeight());
-        assertEquals("testInsertingRightRightNodeAndRebalance", 1, node1.getHeight());
-        assertEquals("testInsertingRightRightNodeAndRebalance", 1, avlTree.getBalance(node1));
-        assertEquals("testInsertingRightRightNodeAndRebalance", 0, avlTree.getBalance(node2));
+        assertEquals("This test should return that the height of node2 is 0", 0, node2.getHeight());
+        assertEquals("This test should return that the height of node1 is 1", 1, node1.getHeight());
+        assertEquals("This test should return that the node1 is leaning to the right", 1, avlTree.getBalance(node1));
+        assertEquals("This test should return that the node2 is balanced", 0, avlTree.getBalance(node2));
 
         node3 = new AvlNode<>(14);
         avlTree.insertAvlNode(node3);
-        assertEquals("testInsertingRightRightNodeAndRebalance", node2, avlTree.getTop());
-        assertEquals("testInsertingRightRightNodeAndRebalance", node1, node2.getLeft());
-        assertEquals("testInsertingRightRightNodeAndRebalance", node3, node2.getRight());
+        assertEquals("This test should return that node2 should be the top of the tree", node2, avlTree.getTop());
+        assertEquals("This test should return that node1 should be the left child of node2", node1, node2.getLeft());
+        assertEquals("This test should return that node3 should be the right child of node2", node3, node2.getRight());
 
-        assertEquals("testInsertingRightRightNodeAndRebalance", 1, avlTree.getTop().getHeight());
-        assertEquals("testInsertingRightRightNodeAndRebalance", 0,
+        assertEquals("This test should return that the height of the top node is 0", 1, avlTree.getTop().getHeight());
+        assertEquals("This test should return that the height of the left child of the top node is 0", 0,
                 avlTree.getTop().getLeft().getHeight());
-        assertEquals("testInsertingRightRightNodeAndRebalance", 0,
+        assertEquals("This test should return that the height of the right child of the top node is 0", 0,
                 avlTree.getTop().getRight().getHeight());
-        assertEquals("testInsertingRightRightNodeAndRebalance", -1, avlTree.height(node1.getLeft()));
-        assertEquals("testInsertingRightRightNodeAndRebalance", -1, avlTree.height(node1.getRight()));
-        assertEquals("testInsertingRightRightNodeAndRebalance", -1, avlTree.height(node3.getLeft()));
-        assertEquals("testInsertingRightRightNodeAndRebalance", -1, avlTree.height(node3.getRight()));
+        assertEquals("This thest should return that the height of the left child of node1 is -1", -1, avlTree.height(node1.getLeft()));
+        assertEquals("This thest should return that the height of the lright child of node1 is -1", -1, avlTree.height(node1.getRight()));
+        assertEquals("This thest should return that the height of the left child of node3 is -1", -1, avlTree.height(node3.getLeft()));
+        assertEquals("This thest should return that the height of the right child of node3 is -1", -1, avlTree.height(node3.getRight()));
 
         String tree = " | 10 | 7 | 14";
         assertEquals("This test should return that actual tree is | 10 | 7 | 14", tree, avlTree.toString());
@@ -338,7 +361,7 @@ public class AvlTreeTest {
      * Testing adding 7 - 4 - 3 - 2 - 1
      */
     @Test
-    @DisplayName("Test that ")
+    @DisplayName("Test that inserting 7,4,3,2,1 results on tree | 4 | 2 | 1 | 3 | 7 ")
     public void testInserting7_4_3_2_1() {
         AvlNode<Integer> node1, node2, node3, node4, node5;
 
@@ -354,14 +377,14 @@ public class AvlTreeTest {
         avlTree.insertAvlNode(node4);
         avlTree.insertAvlNode(node5);
 
-        assertEquals("testInserting7_4_3_2_1", node2, avlTree.getTop());
-        assertEquals("testInserting7_4_3_2_1", node4, node2.getLeft());
-        assertEquals("testInserting7_4_3_2_1", node1, node2.getRight());
-        assertEquals("testInserting7_4_3_2_1", node5, node4.getLeft());
-        assertEquals("testInserting7_4_3_2_1", node3, node4.getRight());
-        assertEquals("testInserting7_4_3_2_1", 0, node1.getHeight());
-        assertEquals("testInserting7_4_3_2_1", 2, node2.getHeight());
-        assertEquals("testInserting7_4_3_2_1", 1, node4.getHeight());
+        assertEquals("This test should return that node2 should be the top of the tree", node2, avlTree.getTop());
+        assertEquals("This test should return that node4 should be the left child of node2", node4, node2.getLeft());
+        assertEquals("This test should return that node1 should be the right child of node2", node1, node2.getRight());
+        assertEquals("This test should return that node5 should be the left child of node4", node5, node4.getLeft());
+        assertEquals("This test should return that node3 should be the right child of node4", node3, node4.getRight());
+        assertEquals("This test should return that the height of node1 is 0", 0, node1.getHeight());
+        assertEquals("This test should return that the height of node2 is 2", 2, node2.getHeight());
+        assertEquals("This test should return that the height of node4 is 1", 1, node4.getHeight());
 
         String tree = " | 4 | 2 | 1 | 3 | 7";
         assertEquals("This test should return that actual tree is | 4 | 2 | 1 | 3 | 7", tree, avlTree.toString());
@@ -387,14 +410,14 @@ public class AvlTreeTest {
         avlTree.insertAvlNode(node4);
         avlTree.insertAvlNode(node5);
 
-        assertEquals("testInserting7_8_9_10_11", node2, avlTree.getTop());
-        assertEquals("testInserting7_8_9_10_11", node4, node2.getRight());
-        assertEquals("testInserting7_8_9_10_11", node1, node2.getLeft());
-        assertEquals("testInserting7_8_9_10_11", node5, node4.getRight());
-        assertEquals("testInserting7_8_9_10_11", node3, node4.getLeft());
-        assertEquals("testInserting7_8_9_10_11", 2, avlTree.getTop().getHeight());
-        assertEquals("testInserting7_8_9_10_11", 1, node4.getHeight());
-        assertEquals("testInserting7_8_9_10_11", 0, node1.getHeight());
+        assertEquals("This test should return that node2 should be the top of the tree", node2, avlTree.getTop());
+        assertEquals("This test should return that node4 should be the right child of node2", node4, node2.getRight());
+        assertEquals("This test should return that node1 should be the left child of node2", node1, node2.getLeft());
+        assertEquals("This test should return that node5 should be the right child of node4", node5, node4.getRight());
+        assertEquals("This test should return that node3 should be the left child of node4", node3, node4.getLeft());
+        assertEquals("This test should return that the height of the top is 2", 2, avlTree.getTop().getHeight());
+        assertEquals("This test should return that the height of node4 is 1", 1, node4.getHeight());
+        assertEquals("This test should return that the height of node1 is 0", 0, node1.getHeight());
 
         String tree = " | 8 | 7 | 10 | 9 | 11";
         assertEquals("This test should return that actual tree is | 8 | 7 | 10 | 9 | 11", tree, avlTree.toString());
@@ -417,19 +440,19 @@ public class AvlTreeTest {
         node3 = new AvlNode<>(3);
         avlTree.insertAvlNode(node3);
 
-        assertEquals("testInsertingLeftRightNodeAndRebalance", node3, avlTree.getTop());
-        assertEquals("testInsertingLeftRightNodeAndRebalance", node2, node3.getLeft());
-        assertEquals("testInsertingLeftRightNodeAndRebalance", node1, node3.getRight());
+        assertEquals("This test should return that node3 should be the top of the tree", node3, avlTree.getTop());
+        assertEquals("This test should return that node2 should be at the left branch of node3", node2, node3.getLeft());
+        assertEquals("This test should return that node1 should be at the right branch of node3", node1, node3.getRight());
 
-        assertEquals("testInsertingLeftRightNodeAndRebalance", 1, avlTree.getTop().getHeight());
-        assertEquals("testInsertingLeftRightNodeAndRebalance", 0,
+        assertEquals("This test should return that the height of the top node is 1", 1, avlTree.getTop().getHeight());
+        assertEquals("This test should return that the height of the left branch of the top is 0", 0,
                 avlTree.getTop().getLeft().getHeight());
-        assertEquals("testInsertingLeftRightNodeAndRebalance", 0,
+        assertEquals("This test should return that the height of the right branch of the top is 0", 0,
                 avlTree.getTop().getRight().getHeight());
-        assertEquals("testInsertingLeftRightNodeAndRebalance", -1, avlTree.height(node2.getLeft()));
-        assertEquals("testInsertingLeftRightNodeAndRebalance", -1, avlTree.height(node2.getRight()));
-        assertEquals("testInsertingLeftRightNodeAndRebalance", -1, avlTree.height(node1.getLeft()));
-        assertEquals("testInsertingLeftRightNodeAndRebalance", -1, avlTree.height(node1.getRight()));
+        assertEquals("This test should return that the height of left child of node2 should be -1", -1, avlTree.height(node2.getLeft()));
+        assertEquals("This test should return that the height of right child of node2 should be -1", -1, avlTree.height(node2.getRight()));
+        assertEquals("This test should return that the height of left child of node1 should be -1", -1, avlTree.height(node1.getLeft()));
+        assertEquals("This test should return that the height of right child of node1 should be -1", -1, avlTree.height(node1.getRight()));
 
         String tree = " | 3 | 2 | 7";
         assertEquals("This test should return that actual tree is | 3 | 2 | 7", tree, avlTree.toString());
@@ -452,19 +475,19 @@ public class AvlTreeTest {
         node3 = new AvlNode<>(8);
         avlTree.insertAvlNode(node3);
 
-        assertEquals("The node 8 should be the top of the tree", node3, avlTree.getTop());
-        assertEquals("The node 7 should be at the left branch", node1, node3.getLeft());
-        assertEquals("The node 9 should be at the right branch", node2, node3.getRight());
+        assertEquals("This test should return that node3 should be the top of the tree", node3, avlTree.getTop());
+        assertEquals("This test should return that node1 should be at the left branch of node3", node1, node3.getLeft());
+        assertEquals("This test should return that node2 should be at the right branch of node3", node2, node3.getRight());
 
-        assertEquals("The top should have height 1", 1, avlTree.getTop().getHeight());
-        assertEquals("The left branch have height 0", 0,
+        assertEquals("This test should return that top should have height 1", 1, avlTree.getTop().getHeight());
+        assertEquals("This test should return that the left branch have height 0", 0,
                 avlTree.getTop().getLeft().getHeight());
-        assertEquals("The right branch should have height 0", 0,
+        assertEquals("This thest should return that the right branch should have height 0", 0,
                 avlTree.getTop().getRight().getHeight());
-        assertEquals("Height of leaf left child should be -1", -1, avlTree.height(node2.getLeft()));
-        assertEquals("Height of leaf right child should be -1", -1, avlTree.height(node2.getRight()));
-        assertEquals("Height of leaf left child should be -1", -1, avlTree.height(node1.getLeft()));
-        assertEquals("Height of leaf right child should be -1", -1, avlTree.height(node1.getRight()));
+        assertEquals("This test should return that the height of leaf left child of node2 should be -1", -1, avlTree.height(node2.getLeft()));
+        assertEquals("This test should return that the height of leaf right child of node2 should be -1", -1, avlTree.height(node2.getRight()));
+        assertEquals("This test should return that the height of leaf left child of node1 should be -1", -1, avlTree.height(node1.getLeft()));
+        assertEquals("This test should return that the height of leaf right child of node1 should be -1", -1, avlTree.height(node1.getRight()));
 
         String tree = " | 8 | 7 | 9";
         assertEquals("This test should return that actual tree is | 8 | 7 | 9", tree, avlTree.toString());
@@ -490,15 +513,15 @@ public class AvlTreeTest {
         node5 = new AvlNode<>(3);
         avlTree.insertAvlNode(node5);
 
-        assertEquals("testSearchNode", node1, avlTree.search(7));
-        assertEquals("testSearchNode", node2, avlTree.search(9));
-        assertEquals("testSearchNode", node3, avlTree.search(8));
-        assertEquals("testSearchNode", 2,
+        assertEquals("This test should return that the node1 is the one with the item 7", node1, avlTree.search(7));
+        assertEquals("This test should return that the node2 is the one with the item 9", node2, avlTree.search(9));
+        assertEquals("This test should return that the node3 is the one with the item 8", node3, avlTree.search(8));
+        assertEquals("This test should return that the node created with item 2, really has the item 2", 2,
                 avlTree.searchNode(new AvlNode<>(2)).getItem());
-        assertEquals("testSearchNode", node4, avlTree.search(2));
-        assertEquals("testSearchNode", node5, avlTree.search(3));
-        assertNull("testInsertNode", avlTree.search(14));
-        assertNull("testSearchNode", avlTree.search(0));
+        assertEquals("This test should return that the node4 is the one with the item 2", node4, avlTree.search(2));
+        assertEquals("This test should return that the node5 is the one with the item 3", node5, avlTree.search(3));
+        assertNull("This test should return that the node with the item 14 is null beacuase it wasn't created", avlTree.search(14));
+        assertNull("This test should return that the node with the item 0 is null because it wasn't created", avlTree.search(0));
 
         String tree = " | 8 | 3 | 2 | 7 | 9";
         assertEquals("This test should return that actual tree is | 8 | 3 | 2 | 7 | 9", tree, avlTree.toString());
@@ -534,14 +557,36 @@ public class AvlTreeTest {
         avlTree.insertAvlNode(node);
 
         node = avlTree.search(8);
-        assertEquals("testFindSuccessor", avlTree.search(10), avlTree.findSuccessor(node));
+        assertEquals("This test should return that the succesor of the node with item 8 is the node with item 10", avlTree.search(10), avlTree.findSuccessor(node));
         node = avlTree.search(10);
-        assertEquals("testFindSuccessor", avlTree.search(12), avlTree.findSuccessor(node));
+        assertEquals("This test should return that the succesor of the node with item 10 is the node with item 12", avlTree.search(12), avlTree.findSuccessor(node));
         node = avlTree.search(14);
-        assertEquals("testFindSuccessor", avlTree.search(20), avlTree.findSuccessor(node));
+        assertEquals("This test should return that the succesor of the node with item 14 is the node with item 20", avlTree.search(20), avlTree.findSuccessor(node));
 
         String tree = " | 20 | 8 | 4 | 12 | 10 | 14 | 22 | 24";
-        assertEquals("This test should return that actual tree is | 20 | 8 | 4 | 12 | 10 | 14 | 22 | 24", tree, avlTree.toString());
+        assertEquals( "This test should return that actual tree is | 20 | 8 | 4 | 12 | 10 | 14 | 22 | 24", tree, avlTree.toString());
+    }
+
+    @Test
+    @DisplayName("Test that doesnt' find the succesor because it doesn't have one")
+    public void findNoSuccesor(){
+        AvlNode<Integer> node;
+
+        node = new AvlNode<>(20);
+        avlTree.insertAvlNode(node);
+
+        assertNull("Test that should return that the succesor of the top node is null" ,avlTree.findSuccessor(node));
+
+    }
+
+    @Test
+    @DisplayName("Test that checks that you can't delete a node that is not in the tree")
+    public void testDeletingANonExistingNode(){
+        AvlNode<Integer> node1;
+        node1 = new AvlNode<>(7);
+        avlTree.insertAvlNode(node1);
+
+        assertThrows(NullPointerException.class, () -> avlTree.delete(8));
     }
 
     @Test
@@ -568,29 +613,79 @@ public class AvlTreeTest {
         assertEquals("This test should return that actual tree is | 7 | 2 | 3 | 9 | 8", tree, avlTree.toString());
 
         avlTree.delete(3); // right leaf node
-        assertEquals("testDeletingLeafNodes", null, node3.getRight());
-        assertEquals("testDeletingLeafNodes", 0, node3.getHeight());
-        assertEquals("testDeletingLeafNodes", 2, avlTree.getTop().getHeight());
+        assertEquals("This test should return that the right node of node3 is null", null, node3.getRight());
+        assertEquals("This test should return that the height of the node3 is 0", 0, node3.getHeight());
+        assertEquals("This test should return that the height of the top node is 2", 2, avlTree.getTop().getHeight());
         assertEquals("This test should return that actual tree is | 7 | 2 | 9 | 8", " | 7 | 2 | 9 | 8", avlTree.toString());
 
         avlTree.delete(8); // left leaf node
-        assertEquals("testDeletingLeafNodes", null, node2.getLeft());
-        assertEquals("testDeletingLeafNodes", 0, node2.getHeight());
-        assertEquals("testDeletingLeafNodes", 1, avlTree.getTop().getHeight());
+        assertEquals("This test should return that the left node of node2 is null", null, node2.getLeft());
+        assertEquals("This test should return that the height of the node2 is 0", 0, node2.getHeight());
+        assertEquals("This test should return that the height of the top node is 1", 1, avlTree.getTop().getHeight());
         assertEquals("This test should return that actual tree is | 7 | 2 | 9", " | 7 | 2 | 9", avlTree.toString());
 
         avlTree.delete(2); // left leaf node
-        assertEquals("testDeletingLeafNodes", null, node1.getLeft());
-        assertEquals("testDeletingLeafNodes", 1, node1.getHeight());
+        assertEquals("This test should return that the left node of node1 is null", null, node1.getLeft());
+        assertEquals("This test should return that the height of the node1 is 1", 1, node1.getHeight());
         assertEquals("This test should return that actual tree is | 7 | 9", " | 7 | 9", avlTree.toString());
 
         avlTree.delete(9); // right leaf node
-        assertEquals("testDeletingLeafNodes", null, node1.getRight());
-        assertEquals("testDeletingLeafNodes", 0, node1.getHeight());
+        assertEquals("This test should return that the right node of node1 is null", null, node1.getRight());
+        assertEquals("This test should return that the height of the node1 is 0", 0, node1.getHeight());
         assertEquals("This test should return that actual tree is | 7", " | 7", avlTree.toString());
 
         avlTree.delete(7); // left leaf node
-        assertEquals("testDeletingLeafNodes", null, avlTree.getTop());
+        assertEquals("This test should return that the top node is null", null, avlTree.getTop());
+        assertEquals("This test should return that actual tree is empty", "", avlTree.toString());
+    }
+
+    @Test
+    @DisplayName("Test that checks that you can delete leaf nodes correctly")
+    public void testDeletingLeafNodesr() {
+        AvlNode<Integer> node1, node2, node3, node4, node5;
+
+        node1 = new AvlNode<>(7);
+        avlTree.insertAvlNode(node1);
+
+        node2 = new AvlNode<>(9);
+        avlTree.insertAvlNode(node2);
+
+        node3 = new AvlNode<>(2);
+        avlTree.insertAvlNode(node3);
+
+        node4 = new AvlNode<>(8);
+        avlTree.insertAvlNode(node4);
+
+        node5 = new AvlNode<>(3);
+        avlTree.insertAvlNode(node5);
+
+        String tree = " | 7 | 2 | 3 | 9 | 8";
+        assertEquals("This test should return that actual tree is | 7 | 2 | 3 | 9 | 8", tree, avlTree.toString());
+
+        avlTree.delete(3); // right leaf node
+        assertEquals("This test should return that the right node of node3 is null", null, node3.getRight());
+        assertEquals("This test should return that the height of the node3 is 0", 0, node3.getHeight());
+        assertEquals("This test should return that the height of the top node is 2", 2, avlTree.getTop().getHeight());
+        assertEquals("This test should return that actual tree is | 7 | 2 | 9 | 8", " | 7 | 2 | 9 | 8", avlTree.toString());
+
+        avlTree.delete(8); // left leaf node
+        assertEquals("This test should return that the left node of node2 is null", null, node2.getLeft());
+        assertEquals("This test should return that the height of the node2 is 0", 0, node2.getHeight());
+        assertEquals("This test should return that the height of the top node is 1", 1, avlTree.getTop().getHeight());
+        assertEquals("This test should return that actual tree is | 7 | 2 | 9", " | 7 | 2 | 9", avlTree.toString());
+
+        avlTree.delete(2); // left leaf node
+        assertEquals("This test should return that the left node of node1 is null", null, node1.getLeft());
+        assertEquals("This test should return that the height of the node1 is 1", 1, node1.getHeight());
+        assertEquals("This test should return that actual tree is | 7 | 9", " | 7 | 9", avlTree.toString());
+
+        avlTree.delete(7); // left leaf node
+        assertEquals("This test should return that the right node of node1 is null", null, node1.getRight());
+        assertEquals("This test should return that the height of the node1 is 0", 0, node1.getHeight());
+        assertEquals("This test should return that actual tree is | 9", " | 9", avlTree.toString());
+
+        avlTree.delete(9); // right leaf node
+        assertEquals("This test should return that the top node is null", null, avlTree.getTop());
         assertEquals("This test should return that actual tree is empty", "", avlTree.toString());
     }
 
@@ -746,5 +841,32 @@ public class AvlTreeTest {
 
         avlTree.delete(20);
         assertEquals("This test should return that the final tree is | 12 | 8 | 4 | 10 | 22 | 14 | 24", " | 12 | 8 | 4 | 10 | 22 | 14 | 24", avlTree.toString());
+    }
+
+    @Nested
+    @DisplayName("When calling size() method of a tree")
+    class TreeSizeTests{
+        @Test
+        @DisplayName("empty tree means it has 0 elements")
+        public void emptyTreeSizeTest(){
+            assertTrue("It should give 0", avlTree.size() == 0);
+        }
+
+        @Test
+        @DisplayName("tree containing only root means it has 1 element")
+        public void oneElementTreeSizeTest(){
+            AvlNode<Integer> root = new AvlNode<>(2);
+            avlTree.insertAvlNode(root);
+            assertEquals("It should give 0", 1,avlTree.size() );
+        }
+
+        @Test
+        @DisplayName("it calculates right number of elements")
+        public void sizeWorksFineWithMoreElements(){
+            AvlNode<Integer> root = new AvlNode<>(2);
+            avlTree.insertAvlNode(root);
+            root.setLeft(new AvlNode<>(3));
+            assertEquals("It should give 2",  2, avlTree.size());
+        }
     }
 }

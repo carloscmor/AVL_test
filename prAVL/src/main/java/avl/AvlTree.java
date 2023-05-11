@@ -65,7 +65,7 @@ public class AvlTree<T> {
    * @see #insertNodeLeft(AvlNode) 
    * @see #insertNodeRight(AvlNode)
    */
-  public void insertAvlNode(AvlNode<T> node) {
+  void insertAvlNode(AvlNode<T> node) {
     if (avlIsEmpty()) insertTop(node);
     else switch (searchClosestNode(node)) {
       case -1 -> insertNodeLeft(node);
@@ -92,7 +92,7 @@ public class AvlTree<T> {
    * @return the found node, or {@code null}
    * @see #search(Object)
    */
-  public AvlNode<T> searchNode(AvlNode<T> targetNode) {
+  AvlNode<T> searchNode(AvlNode<T> targetNode) {
     AvlNode<T> currentNode;
     AvlNode<T> result = null;
 
@@ -152,7 +152,7 @@ public class AvlTree<T> {
    * @param node the node to delete
    * @see #delete(Object)
    */
-  public void deleteNode(AvlNode<T> node) {
+   void deleteNode(AvlNode<T> node) {
     AvlNode<T> nodeFound;
 
     nodeFound = searchNode(node);
@@ -169,6 +169,8 @@ public class AvlTree<T> {
         else if (successor.hasOnlyALeftChild()) deleteNodeWithALeftChild(successor);
         else if (successor.hasOnlyARightChild()) deleteNodeWithARightChild(successor);
       }
+    } else {
+      throw new NullPointerException("No se puede eliminar el nodo porque no existe");
     }
   }
 
@@ -178,7 +180,7 @@ public class AvlTree<T> {
    * @param node the leaf node to delete
    * @see #deleteNode(AvlNode)
    */
-  private void deleteLeafNode(AvlNode<T> node) {
+  void deleteLeafNode(AvlNode<T> node) {
     if (node.hasParent()) {
       if (node.getParent().getLeft() == node) node.getParent().setLeft(null);
       else node.getParent().setRight(null);
@@ -194,7 +196,7 @@ public class AvlTree<T> {
    * @see #deleteNode(AvlNode)
    * @see #deleteNodeWithARightChild(AvlNode)
    */
-  private void deleteNodeWithALeftChild(AvlNode<T> node) {
+  void deleteNodeWithALeftChild(AvlNode<T> node) {
     node.setItem(node.getLeft().getItem());
     node.setLeft(null);
     node.updateHeight();
@@ -208,7 +210,7 @@ public class AvlTree<T> {
    * @see #deleteNode(AvlNode)
    * @see #deleteNodeWithALeftChild(AvlNode)
    */
-  private void deleteNodeWithARightChild(AvlNode<T> node) {
+  void deleteNodeWithARightChild(AvlNode<T> node) {
     node.setItem(node.getRight().getItem());
     node.setRight(null);
     node.updateHeight();
@@ -307,8 +309,8 @@ public class AvlTree<T> {
   }
 
   /**
-   * TODO
-   * @param node TODO
+   * method for rebalancing tree
+   * @param node to rebalance
    */
   public void rebalance(AvlNode<T> node) {
     AvlNode<T> currentNode;
@@ -341,10 +343,10 @@ public class AvlTree<T> {
   }
 
   /**
-   * Auxiliary method TODO
-   * @param node TODO
+   * Auxiliary method: given a root node, it rotates one position to left side.
+   * @param node to rotate
    */
-  private void leftRotation(AvlNode<T> node) {
+  void leftRotation(AvlNode<T> node) {
     AvlNode<T> leftNode = node.getLeft();
 
     if (node.hasParent()) {
@@ -352,7 +354,6 @@ public class AvlTree<T> {
       if (node.getParent().getLeft() == node) node.getParent().setLeft(leftNode);
       else node.getParent().setRight(leftNode);
     } else {
-      //noinspection SuspiciousNameCombination
       setTop(leftNode);
     }
 
@@ -365,10 +366,10 @@ public class AvlTree<T> {
   }
 
   /**
-   * Auxiliary method TODO
-   * @param node TODO
+   * Auxiliary method given a root node, it rotates one position to the right side
+   * @param node to rotate
    */
-  private void rightRotation(AvlNode<T> node) {
+  void rightRotation(AvlNode<T> node) {
     AvlNode<T> rightNode = node.getRight();
 
     if (node.hasParent()) {
@@ -389,10 +390,10 @@ public class AvlTree<T> {
   }
 
   /**
-   * Auxiliary method TODO
-   * @param node TODO
+   * Auxiliary method: calling {@link #leftRotation(AvlNode)} twice
+   * @param node to rotate
    */
-  private void doubleLeftRotation(AvlNode<T> node) {
+  void doubleLeftRotation(AvlNode<T> node) {
     AvlNode<T> leftNode = node.getLeft();
 
     rightRotation(leftNode);
@@ -400,10 +401,10 @@ public class AvlTree<T> {
   }
 
   /**
-   * Auxiliary method TODO
-   * @param node TODO
+   * Auxiliary method given a root node, it rotates two positions to the right side
+   * @param node to rotate. REQUIRES: a call to {@link #rightRotation(AvlNode) and #leftRotation(AvlNode)}
    */
-  private void doubleRightRotation(AvlNode<T> node) {
+  void doubleRightRotation(AvlNode<T> node) {
     AvlNode<T> rightNode = node.getRight();
 
     leftRotation(rightNode);
@@ -416,7 +417,7 @@ public class AvlTree<T> {
    * @return the value representing the balance (-1 if leaning to the left,
    * +1 if leaning to the right, and 0 if balanced
    */
-  public int getBalance(AvlNode<T> node) {
+  int getBalance(AvlNode<T> node) {
     int leftHeight;
     int rightHeight;
 
@@ -454,7 +455,7 @@ public class AvlTree<T> {
    * Set top node
    * @param top the node to set as top
    */
-  public void setTop(AvlNode<T> top) {
+  void setTop(AvlNode<T> top) {
     this.top = top;
     this.top.setParent(null);
   }
@@ -464,7 +465,7 @@ public class AvlTree<T> {
    * @param node the top of the subtree
    * @return the height if the node is not null, -1 otherwise
    */
-  public int height(AvlNode<T> node) {
+  int height(AvlNode<T> node) {
     return node == null ? -1 : node.getHeight();
   }
 

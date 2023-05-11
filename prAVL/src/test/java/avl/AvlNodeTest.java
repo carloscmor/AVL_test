@@ -41,6 +41,32 @@ public class AvlNodeTest {
     public void doesNotHaveLeft() {
       assertFalse("testHasLeft", node.hasLeft());
     }
+
+    @Test
+    @DisplayName("The node has only a left child")
+    public void hasOnlyRightChild() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setLeft(node2);
+      assertTrue("testHasRight", node.hasOnlyALeftChild());
+    }
+
+    @Test
+    @DisplayName("The node doesn't have only a left child")
+    public void DosenthaveOnlyLeftChild() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setRight(node2);
+      AvlNode<Integer> node3 = new AvlNode<>(3);
+      node.setLeft(node3);
+      assertFalse("testHasRight", node.hasOnlyALeftChild());
+    }
+
+    @Test
+    @DisplayName("The node has only a right child")
+    public void hasOnlyLeftChild() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setRight(node2);
+      assertFalse("testHasRight", node.hasOnlyALeftChild());
+    }
   }
 
   @Nested
@@ -56,8 +82,35 @@ public class AvlNodeTest {
 
     @Test
     @DisplayName("The node does not have right side")
+    //Tiene no right child y no left child
     public void testHasNoRight() {
       assertFalse("testHasRight", node.hasRight());
+    }
+
+    @Test
+    @DisplayName("The node has only a right child")
+    public void hasOnlyRightChild() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setRight(node2);
+      assertTrue("testHasRight", node.hasOnlyARightChild());
+    }
+
+    @Test
+    @DisplayName("The node doesn't have only a right child")
+    public void DosenthaveOnlyRightChild() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setRight(node2);
+      AvlNode<Integer> node3 = new AvlNode<>(3);
+      node.setLeft(node3);
+      assertFalse("testHasRight", node.hasOnlyARightChild());
+    }
+
+    @Test
+    @DisplayName("The node has only a left child")
+    public void hasOnlyLeftChild() {
+      AvlNode<Integer> node2 = new AvlNode<>(6);
+      node.setLeft(node2);
+      assertFalse("testHasRight", node.hasOnlyARightChild());
     }
   }
 
