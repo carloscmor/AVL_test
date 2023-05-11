@@ -32,8 +32,10 @@ import java.util.Comparator;
  * @author Daniel García Rodríguez
  * @author María Fernández Moreno
  * @author Nuria Rodríguez Tortosa
+ *
+ * This class represents a binary AVL tree data structure, where s
  */
-public class AvlTree<T> {
+public class AvlTree<T> implements ITree<T>{
   AvlNode<T> top;
   Comparator<T> comparator;
 
@@ -140,6 +142,13 @@ public class AvlTree<T> {
       return 1 + treeSizeRec(node.getLeft()) + treeSizeRec(node.getRight());
     }
   }
+
+  /*
+    Old implementation that caused wrong behaviour !!!
+  private int treeSizeRec(AvlNode<T> node){
+    return node != null && (node.hasLeft() || node.hasRight()) ?
+            1 + treeSizeRec(node.getLeft()) + treeSizeRec(node.getRight()) : 0;
+  }*/
 
   /**
    * This method deletes the node whose item is given.
