@@ -849,7 +849,8 @@ public class AvlTreeTest {
         @Test
         @DisplayName("empty tree means it has 0 elements")
         public void emptyTreeSizeTest(){
-            assertTrue("It should give 0", avlTree.size() == 0);
+            int expectedSize = 0;
+            assertEquals("It should give 0", expectedSize, avlTree.size());
         }
 
         @Test
@@ -857,16 +858,19 @@ public class AvlTreeTest {
         public void oneElementTreeSizeTest(){
             AvlNode<Integer> root = new AvlNode<>(2);
             avlTree.insertAvlNode(root);
-            assertEquals("It should give 0", 1,avlTree.size() );
+
+            int expectedSize = 1;
+            assertEquals("It should give 0", expectedSize,avlTree.size() );
         }
 
         @Test
         @DisplayName("it calculates right number of elements")
         public void sizeWorksFineWithMoreElements(){
-            AvlNode<Integer> root = new AvlNode<>(2);
-            avlTree.insertAvlNode(root);
-            root.setLeft(new AvlNode<>(3));
-            assertEquals("It should give 2",  2, avlTree.size());
+            avlTree.insert(2);
+            avlTree.insert(3);
+
+            int expectedSize = 2;
+            assertEquals("It should give 2",  expectedSize, avlTree.size());
         }
     }
 }

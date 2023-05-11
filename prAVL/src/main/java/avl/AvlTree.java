@@ -134,8 +134,11 @@ public class AvlTree<T> {
    * @see #size()
    */
   private int treeSizeRec(AvlNode<T> node){
-    return node != null && (node.hasLeft() || node.hasRight()) ?
-            1 + treeSizeRec(node.getLeft()) + treeSizeRec(node.getRight()) : 0;
+    if(node == null){
+      return 0;
+    }else{
+      return 1 + treeSizeRec(node.getLeft()) + treeSizeRec(node.getRight());
+    }
   }
 
   /**
