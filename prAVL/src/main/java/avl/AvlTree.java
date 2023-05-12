@@ -186,11 +186,7 @@ public class AvlTree<T> implements ITree<T> {
                 successor.setItem(nodeFound.getItem());
                 nodeFound.setItem(tmp);
                 if (successor.isLeaf()) deleteLeafNode(successor);
-                else if (successor.hasOnlyALeftChild())
-                    deleteNodeWithALeftChild(successor); // TODO cubrir
-                else if (successor.hasOnlyARightChild())
-                    deleteNodeWithARightChild(successor);
-                // else TODO cubrir
+                else deleteNodeWithARightChild(successor); //only a right child
             }
         } else throw new NullPointerException("No se puede eliminar el nodo porque no existe");
     }
@@ -338,7 +334,7 @@ public class AvlTree<T> implements ITree<T> {
     /**
      * method for rebalancing tree
      *
-     * @param node to rebalance
+     * @param node top of the tree to rebalance
      */
     private void rebalance(AvlNode<T> node) {
         AvlNode<T> currentNode;
