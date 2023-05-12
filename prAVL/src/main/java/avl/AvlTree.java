@@ -26,8 +26,9 @@ import java.util.Comparator;
 
 /**
  * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:51
- *
+ * <p>
  * This class represents a binary AVL tree data structure.
+ *
  * @author Carlos Castaño Moreno
  * @author Daniel García Rodríguez
  * @author María Fernández Moreno

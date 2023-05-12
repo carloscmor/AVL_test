@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Improved class made for testing AVL tree with extensions and the latest JUnit verxion (v5).
+ *
  * @author Carlos Castaño Moreno
  * @author Daniel García Rodríguez
  * @author María Fernández Moreno
@@ -567,7 +568,7 @@ class AvlTreeTest {
 
             avlTree.delete(8);
             assertEquals(10, avlTree.getTop().getLeft().getItem(), "This test should return that the item of the left node of the top of the node is 10");
-            assertEquals(" | 20 | 10 | 4 | 14 | 22 | 24", avlTree.toString(),  "This test should return that actual tree is  | 20 | 10 | 4 | 14 | 22 | 24");
+            assertEquals(" | 20 | 10 | 4 | 14 | 22 | 24", avlTree.toString(), "This test should return that actual tree is  | 20 | 10 | 4 | 14 | 22 | 24");
         }
 
         @Test
@@ -669,7 +670,7 @@ class AvlTreeTest {
             assertEquals(node1, avlTree.search(7), "This test should return that the node1 is the one with the item 7");
             assertEquals(node2, avlTree.search(9), "This test should return that the node2 is the one with the item 9");
             assertEquals(node3, avlTree.search(8), "This test should return that the node3 is the one with the item 8");
-            assertEquals(2,avlTree.searchNode(new AvlNode<>(2)).getItem(), "This test should return that the node created with item 2, really has the item 2");
+            assertEquals(2, avlTree.searchNode(new AvlNode<>(2)).getItem(), "This test should return that the node created with item 2, really has the item 2");
             assertEquals(node4, avlTree.search(2), "This test should return that the node4 is the one with the item 2");
             assertEquals(node5, avlTree.search(3), "This test should return that the node5 is the one with the item 3");
             assertNull(avlTree.search(14), "This test should return that the node with the item 14 is null beacuase it wasn't created");
