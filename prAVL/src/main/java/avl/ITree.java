@@ -1,6 +1,6 @@
 package avl;
 
-public interface ITree<T>{
+public interface ITree<T> {
 
     void insert(T item);
 
