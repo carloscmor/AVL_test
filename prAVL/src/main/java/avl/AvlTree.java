@@ -25,339 +25,502 @@ package avl;
 import java.util.Comparator;
 
 /**
- * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:51 Class implementing
- * Avl trees.
+ * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:51
+ * <p>
+ * This class represents a binary AVL tree data structure.
+ *
+ * @author Carlos Castaño Moreno
+ * @author Daniel García Rodríguez
+ * @author María Fernández Moreno
+ * @author Nuria Rodríguez Tortosa
  */
-@SuppressWarnings("unused")
-public class AvlTree<T> {
+@SuppressWarnings("ClassWithTooManyMethods")
+public class AvlTree<T> implements ITree<T> {
+    private AvlNode<T> top;
+    private final Comparator<T> comparator;
 
-  AvlNode<T> top;
-  Comparator<T> comparator;
-
-  /**
-   * Constructor
-   */
-  public AvlTree(Comparator<T> comparator) {
-    top = null;
-    this.comparator = comparator;
-  }
-
-  public void insert(T item) {
-    AvlNode<T> node = new AvlNode<>(item);
-    insertAvlNode(node);
-  }
-
-  public void insertAvlNode(AvlNode<T> node) {
-    if (avlIsEmpty()) {
-      insertTop(node);
-    } else {
-      int result = searchClosestNode(node);
-
-      switch (result) {
-        case -1 -> insertNodeLeft(node);
-        case +1 -> insertNodeRight(node);
-        default -> {
-        }
-      }
+    /**
+     * Constructor
+     *
+     * @param comparator the comparator for ordering the elements of the tree
+     */
+    @SuppressWarnings("WeakerAccess")
+    public AvlTree(Comparator<T> comparator) {
+        top = null;
+        this.comparator = comparator;
     }
-  }
 
-  public AvlNode<T> search(T item) {
-    AvlNode<T> node = new AvlNode<>(item);
-    return searchNode(node);
-  }
+    /**
+     * Method to insert a new node given its value.
+     *
+     * @param item value of node to insert
+     * @see #insertTop(AvlNode)
+     * @see #insertAvlNode(AvlNode)
+     */
+    public void insert(T item) {
+        AvlNode<T> node = new AvlNode<>(item);
+        insertAvlNode(node);
+    }
 
-  public AvlNode<T> searchNode(AvlNode<T> targetNode) {
-    AvlNode<T> currentNode;
-    AvlNode<T> result = null;
+    /**
+     * Method to insert a node into the Tree.
+     *
+     * @param node node to insert
+     * @see #insert(Object)
+     * @see #searchClosestNode(AvlNode)
+     * @see #insertNodeLeft(AvlNode)
+     * @see #insertNodeRight(AvlNode)
+     */
+    void insertAvlNode(AvlNode<T> node) {
+        if (avlIsEmpty()) insertTop(node);
+        else switch (searchClosestNode(node)) {
+            case -1 -> insertNodeLeft(node);
+            case +1 -> insertNodeRight(node);
+            default -> {
+            }
+        }
+    }
 
-    currentNode = top;
-    if (top != null) {
-      boolean searchFinished;
-      int comparison;
-      searchFinished = false;
-      while (!searchFinished) {
-        comparison = compareNodes(targetNode, currentNode);
-        if (comparison < 0) {
-          if (currentNode.getLeft() != null) currentNode = currentNode.getLeft();
-          else searchFinished = true;
-        } else if (comparison > 0) {
-          if (currentNode.getRight() != null) currentNode = currentNode.getRight();
-          else searchFinished = true;
+    /**
+     * Method to search for a node whose item is given.
+     *
+     * @param item item of the node to search for
+     * @return the found node, or {@code null}
+     * @see #searchNode(AvlNode)
+     */
+    public AvlNode<T> search(T item) {
+        AvlNode<T> node = new AvlNode<>(item);
+        return searchNode(node);
+    }
+
+    /**
+     * Method to search for a given node.
+     *
+     * @param targetNode the node to search for
+     * @return the found node, or {@code null}
+     * @see #search(Object)
+     */
+    AvlNode<T> searchNode(AvlNode<T> targetNode) {
+        AvlNode<T> currentNode;
+        AvlNode<T> result = null;
+
+        currentNode = top;
+        if (top != null) {
+            boolean searchFinished;
+            int comparison;
+            searchFinished = false;
+            while (!searchFinished) {
+                comparison = compareNodes(targetNode, currentNode);
+                if (comparison < 0) {
+                    if (currentNode.getLeft() != null) currentNode = currentNode.getLeft();
+                    else searchFinished = true;
+                } else if (comparison > 0) {
+                    if (currentNode.getRight() != null) currentNode = currentNode.getRight();
+                    else searchFinished = true;
+                } else {
+                    searchFinished = true;
+                    result = currentNode;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * This method calculates the size of the tree.
+     *
+     * @return the size of the tree
+     * @see #treeSizeRec(AvlNode)
+     */
+    public int size() {
+        return this.treeSizeRec(this.top);
+    }
+
+    /**
+     * This auxiliary method calculates the size of the subtree whose top is the given node.
+     *
+     * @param node the top of the subtree
+     * @return the size of the subtree
+     * @see #size()
+     */
+    private int treeSizeRec(AvlNode<T> node) {
+        return node == null ? 0 : 1 + treeSizeRec(node.getLeft()) + treeSizeRec(node.getRight());
+    }
+
+  /*
+    Old implementation that caused wrong behaviour !!!
+  private int treeSizeRec(AvlNode<T> node){
+    return node != null && (node.hasLeft() || node.hasRight()) ?
+            1 + treeSizeRec(node.getLeft()) + treeSizeRec(node.getRight()) : 0;
+  }*/
+
+    /**
+     * This method deletes the node whose item is given.
+     *
+     * @param item item of the node to delete
+     * @see #deleteNode(AvlNode)
+     */
+    public void delete(T item) {
+        deleteNode(new AvlNode<>(item));
+    }
+
+    /**
+     * This method deletes the given item.
+     *
+     * @param node the node to delete
+     * @see #delete(Object)
+     */
+    private void deleteNode(AvlNode<T> node) {
+        AvlNode<T> nodeFound;
+
+        nodeFound = searchNode(node);
+        if (nodeFound != null) {
+            if (nodeFound.isLeaf()) deleteLeafNode(nodeFound);
+            else if (nodeFound.hasOnlyALeftChild()) deleteNodeWithALeftChild(nodeFound);
+            else if (nodeFound.hasOnlyARightChild()) deleteNodeWithARightChild(nodeFound);
+            else { // has two children
+                AvlNode<T> successor = findSuccessor(nodeFound);
+                T tmp = successor.getItem();
+                successor.setItem(nodeFound.getItem());
+                nodeFound.setItem(tmp);
+                if (successor.isLeaf()) deleteLeafNode(successor);
+                else deleteNodeWithARightChild(successor); //only a right child
+            }
+        } else throw new NullPointerException("No se puede eliminar el nodo porque no existe");
+    }
+
+    /**
+     * This auxiliary method deletes the given leaf node.
+     *
+     * @param node the leaf node to delete
+     * @implNote This implementation asumes the given node is a <i>leaf node</i>.
+     * @see #deleteNode(AvlNode)
+     */
+    private void deleteLeafNode(AvlNode<T> node) {
+        if (node.hasParent()) {
+            if (node.getParent().getLeft() == node) node.getParent().setLeft(null);
+            else node.getParent().setRight(null);
+            node.getParent().updateHeight();
+            rebalance(node.getParent());
+        } else top = null;
+    }
+
+    /**
+     * This auxiliary method deletes the given node with a left child.
+     *
+     * @param node the node to delete
+     * @implNote This implementation asumes the given node has a <i>left child</i>.
+     * @see #deleteNode(AvlNode)
+     * @see #deleteNodeWithARightChild(AvlNode)
+     */
+    private void deleteNodeWithALeftChild(AvlNode<T> node) {
+        node.setItem(node.getLeft().getItem());
+        node.setLeft(null);
+        node.updateHeight();
+        rebalance(node);
+    }
+
+    /**
+     * This auxiliary method deletes the given node with a right child.
+     *
+     * @param node the node to delete
+     * @implNote This implementation asumes the given node has a <i>right child</i>.
+     * @see #deleteNode(AvlNode)
+     * @see #deleteNodeWithALeftChild(AvlNode)
+     */
+    private void deleteNodeWithARightChild(AvlNode<T> node) {
+        node.setItem(node.getRight().getItem());
+        node.setRight(null);
+        node.updateHeight();
+        rebalance(node);
+    }
+
+    /**
+     * Searches for the closest node of the node passed as argument
+     *
+     * @param node the node to search the closest for
+     * @return -1 if node has to be inserted in the left,
+     * +1 if it must be inserted in the right, 0 otherwise
+     */
+    int searchClosestNode(AvlNode<T> node) {
+        AvlNode<T> currentNode;
+        int result = 0;
+
+        currentNode = top;
+        if (top != null) {
+            int comparison;
+            boolean notFound = true;
+            while (notFound) {
+                comparison = compareNodes(node, currentNode);
+                if (comparison < 0) {
+                    if (currentNode.hasLeft()) currentNode = currentNode.getLeft();
+                    else {
+                        notFound = false;
+                        node.setClosestNode(currentNode);
+                        result = -1;
+                    }
+                } else if (comparison > 0) {
+                    if (currentNode.hasRight()) currentNode = currentNode.getRight();
+                    else {
+                        notFound = false;
+                        node.setClosestNode(currentNode);
+                        result = 1;
+                    }
+                } else {
+                    notFound = false;
+                    node.setClosestNode(currentNode);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Searches for the node which is the next in numeric order
+     *
+     * @param node the node from which to search
+     * @return the node which is the next in numeric order
+     */
+    AvlNode<T> findSuccessor(AvlNode<T> node) {
+        AvlNode<T> result;
+
+        if (node.hasRight()) {
+            AvlNode<T> tmp = node.getRight();
+            while (tmp.hasLeft()) tmp = tmp.getLeft();
+            result = tmp;
         } else {
-          searchFinished = true;
-          result = currentNode;
+            while (node.hasParent() && (node.getParent().getRight() == node)) node = node.getParent();
+            result = node.getParent();
         }
-      }
+        return result;
     }
-    return result;
-  }
 
-  public void delete(T item) {
-    deleteNode(new AvlNode<>(item));
-  }
-
-  public void deleteNode(AvlNode<T> node) {
-    AvlNode<T> nodeFound;
-
-    nodeFound = searchNode(node);
-    if (nodeFound != null) {
-      if (nodeFound.isLeaf()) deleteLeafNode(nodeFound);
-      else if (nodeFound.hasOnlyALeftChild()) deleteNodeWithALeftChild(nodeFound);
-      else if (nodeFound.hasOnlyARightChild()) deleteNodeWithARightChild(nodeFound);
-      else { // has two children
-        AvlNode<T> successor = findSuccessor(nodeFound);
-        T tmp = successor.getItem();
-        successor.setItem(nodeFound.getItem());
-        nodeFound.setItem(tmp);
-        if (successor.isLeaf()) deleteLeafNode(successor);
-        else if (successor.hasOnlyALeftChild()) deleteNodeWithALeftChild(successor);
-        else if (successor.hasOnlyARightChild()) deleteNodeWithARightChild(successor);
-      }
+    /**
+     * Insert node in the left of its nearest node
+     *
+     * @param node REQUIRES: a previous call to {@link #searchClosestNode(AvlNode)}
+     */
+    private void insertNodeLeft(AvlNode<T> node) {
+        node.getClosestNode().setLeft(node);
+        node.setParent(node.getClosestNode());
+        rebalance(node);
     }
-  }
 
-  public void deleteLeafNode(AvlNode<T> node) {
-    if (!node.hasParent()) top = null;
-    else {
-      if (node.getParent().getLeft() == node) node.getParent().setLeft(null);
-      else node.getParent().setRight(null);
-      node.getParent().updateHeight();
-      rebalance(node.getParent());
+    /**
+     * Insert node in the right of its nearest node
+     *
+     * @param node <b>REQUIRES:</b> a previous call to {@link #searchClosestNode(AvlNode)}
+     */
+    private void insertNodeRight(AvlNode<T> node) {
+        node.getClosestNode().setRight(node);
+        node.setParent(node.getClosestNode());
+        rebalance(node);
     }
-  }
 
-  public void deleteNodeWithALeftChild(AvlNode<T> node) {
-    node.setItem(node.getLeft().getItem());
-    node.setLeft(null);
-    node.updateHeight();
-    rebalance(node);
-  }
+    /**
+     * This method compares the two given nodes.
+     *
+     * @param node1 the first node
+     * @param node2 the other node
+     * @return the output of the comparison according to the comparators
+     */
+    int compareNodes(AvlNode<T> node1, AvlNode<T> node2) {
+        return comparator.compare(node1.getItem(), node2.getItem());
+    }
 
-  public void deleteNodeWithARightChild(AvlNode<T> node) {
-    node.setItem(node.getRight().getItem());
-    node.setRight(null);
-    node.updateHeight();
-    rebalance(node);
-  }
+    /**
+     * method for rebalancing tree
+     *
+     * @param node top of the tree to rebalance
+     */
+    private void rebalance(AvlNode<T> node) {
+        AvlNode<T> currentNode;
+        boolean notFinished;
 
-  /**
-   * Searches for the closest node of the node passed as argument
-   *
-   * @return -1 if node has to be inserted in the left, +1 if it must be inserted in the right, 0
-   * otherwise
-   */
-  public int searchClosestNode(AvlNode<T> node) {
-    AvlNode<T> currentNode;
-    int result = 0;
+        currentNode = node;
+        notFinished = true;
 
-    currentNode = top;
-    if (top != null) {
-      int comparison;
-      boolean notFound = true;
-      while (notFound) {
-        comparison = compareNodes(node, currentNode);
-        if (comparison < 0) {
-          if (currentNode.hasLeft()) currentNode = currentNode.getLeft();
-          else {
-            notFound = false;
-            node.setClosestNode(currentNode);
-            result = -1;
-          }
-        } else if (comparison > 0) {
-          if (currentNode.hasRight()) currentNode = currentNode.getRight();
-          else {
-            notFound = false;
-            node.setClosestNode(currentNode);
-            result = 1;
-          }
-        } else {
-          notFound = false;
-          node.setClosestNode(currentNode);
+        while (notFinished) {
+            if (getBalance(currentNode) == -2) {
+                if (height(currentNode.getLeft().getLeft()) >= height(currentNode.getLeft().getRight()))
+                    leftRotation(currentNode);
+                else doubleLeftRotation(currentNode);
+            }
+
+            if (getBalance(currentNode) == 2) {
+                if (height(currentNode.getRight().getRight()) >= height(currentNode.getRight().getLeft()))
+                    rightRotation(currentNode);
+                else doubleRightRotation(currentNode);
+            }
+
+            if (currentNode.hasParent()) {
+                currentNode.getParent().updateHeight();
+                currentNode = currentNode.getParent();
+            } else {
+                setTop(currentNode);
+                notFinished = false;
+            }
         }
-      }
     }
 
-    return result;
-  }
+    /**
+     * Auxiliary method: given a root node, it rotates one position to left side.
+     *
+     * @param node to rotate
+     */
+    @SuppressWarnings("SuspiciousNameCombination")
+    private void leftRotation(AvlNode<T> node) {
+        AvlNode<T> leftNode = node.getLeft();
 
-  public AvlNode<T> findSuccessor(AvlNode<T> node) {
-    AvlNode<T> result;
+        if (node.hasParent()) {
+            leftNode.setParent(node.getParent());
+            if (node.getParent().getLeft() == node) node.getParent().setLeft(leftNode);
+            else node.getParent().setRight(leftNode);
+        } else setTop(leftNode);
 
-    if (node.hasRight()) {
-      AvlNode<T> tmp = node.getRight();
-      while (tmp.hasLeft()) tmp = tmp.getLeft();
-      result = tmp;
-    } else {
-      while (node.hasParent() && (node.getParent().getRight() == node)) node = node.getParent();
-      result = node.getParent();
+        node.setLeft(node.getLeft().getRight());
+        leftNode.setRight(node);
+        node.setParent(leftNode);
+
+        node.updateHeight();
+        leftNode.updateHeight();
     }
-    return result;
-  }
 
-  /**
-   * Insert node in the left of its nearest node
-   *
-   * @param node REQUIRES: a previous call to searchClosestNode(node)
-   */
-  public void insertNodeLeft(AvlNode<T> node) {
-    node.getClosestNode().setLeft(node);
-    node.setParent(node.getClosestNode());
-    rebalance(node);
-  }
+    /**
+     * Auxiliary method given a root node, it rotates one position to the right side
+     *
+     * @param node to rotate
+     */
+    @SuppressWarnings("SuspiciousNameCombination")
+    private void rightRotation(AvlNode<T> node) {
+        AvlNode<T> rightNode = node.getRight();
 
-  /**
-   * Insert node in the right of its nearest node
-   *
-   * @param node REQUIRES: a previous call to searchClosestNode(node)
-   */
-  public void insertNodeRight(AvlNode<T> node) {
-    node.getClosestNode().setRight(node);
-    node.setParent(node.getClosestNode());
-    rebalance(node);
-  }
+        if (node.hasParent()) {
+            rightNode.setParent(node.getParent());
+            if (node.getParent().getRight() == node) node.getParent().setRight(rightNode);
+            else node.getParent().setLeft(rightNode);
+        } else setTop(rightNode);
 
-  /**
-   * Comparator
-   *
-   * @return The experimentoutput of the comparison according to the comparators
-   */
-  public int compareNodes(AvlNode<T> node1, AvlNode<T> node2) {
-    return comparator.compare(node1.getItem(), node2.getItem());
-  }
+        node.setRight(node.getRight().getLeft());
+        rightNode.setLeft(node);
+        node.setParent(rightNode);
 
-  public void rebalance(AvlNode<T> node) {
-    AvlNode<T> currentNode;
-    boolean notFinished;
-
-    currentNode = node;
-    notFinished = true;
-
-    while (notFinished) {
-      if (getBalance(currentNode) == -2) {
-        if (height(currentNode.getLeft().getLeft()) >= height(currentNode.getLeft().getRight()))
-          leftRotation(currentNode);
-        else doubleLeftRotation(currentNode);
-      }
-
-      if (getBalance(currentNode) == 2) {
-        if (height(currentNode.getRight().getRight()) >= height(currentNode.getRight().getLeft()))
-          rightRotation(currentNode);
-        else doubleRightRotation(currentNode);
-      }
-
-      if (currentNode.hasParent()) {
-        currentNode.getParent().updateHeight();
-        currentNode = currentNode.getParent();
-      } else {
-        setTop(currentNode);
-        notFinished = false;
-      }
+        node.updateHeight();
+        rightNode.updateHeight();
     }
-  }
 
-  public void leftRotation(AvlNode<T> node) {
-    AvlNode<T> leftNode = node.getLeft();
+    /**
+     * Auxiliary method: calling {@link #leftRotation(AvlNode)} twice
+     *
+     * @param node to rotate
+     */
+    private void doubleLeftRotation(AvlNode<T> node) {
+        AvlNode<T> leftNode = node.getLeft();
 
-    if (node.hasParent()) {
-      leftNode.setParent(node.getParent());
-      if (node.getParent().getLeft() == node) node.getParent().setLeft(leftNode);
-      else node.getParent().setRight(leftNode);
-    } else setTop(leftNode);
-
-    node.setLeft(node.getLeft().getRight());
-    leftNode.setRight(node);
-    node.setParent(leftNode);
-
-    node.updateHeight();
-    leftNode.updateHeight();
-  }
-
-  public void rightRotation(AvlNode<T> node) {
-    AvlNode<T> rightNode = node.getRight();
-
-    if (node.hasParent()) {
-      rightNode.setParent(node.getParent());
-      if (node.getParent().getRight() == node) node.getParent().setRight(rightNode);
-      else node.getParent().setLeft(rightNode);
-    } else setTop(rightNode);
-
-    node.setRight(node.getRight().getLeft());
-    rightNode.setLeft(node);
-    node.setParent(rightNode);
-
-    node.updateHeight();
-    rightNode.updateHeight();
-  }
-
-  public void doubleLeftRotation(AvlNode<T> node) {
-    AvlNode<T> leftNode = node.getLeft();
-
-    rightRotation(leftNode);
-    leftRotation(node);
-  }
-
-  public void doubleRightRotation(AvlNode<T> node) {
-    AvlNode<T> rightNode = node.getRight();
-
-    leftRotation(rightNode);
-    rightRotation(node);
-  }
-
-  public int getBalance(AvlNode<T> node) {
-    int leftHeight;
-    int rightHeight;
-
-    if (node.hasLeft()) leftHeight = node.getLeft().getHeight();
-    else leftHeight = -1;
-    if (node.hasRight()) rightHeight = node.getRight().getHeight();
-    else rightHeight = -1;
-
-    return rightHeight - leftHeight;
-  }
-
-  public boolean avlIsEmpty() {
-    return top == null;
-  }
-
-  public void insertTop(AvlNode<T> node) {
-    top = node;
-  }
-
-
-  public AvlNode<T> getTop() {
-    return top;
-  }
-
-  public void setTop(AvlNode<T> top) {
-    this.top = top;
-    this.top.setParent(null);
-  }
-
-  public int height(AvlNode<T> node) {
-    int result;
-    if (node == null) result = -1;
-    else result = node.getHeight();
-
-    return result;
-  }
-
-  public String toString() {
-    String result;
-
-    result = inOrder(top);
-
-    return result;
-  }
-
-  private String inOrder(AvlNode<T> node) {
-    String result;
-    if (node == null) return "";
-    else {
-      result = " | " + node.getItem();
-      result += inOrder(node.getLeft());
-      result += inOrder(node.getRight());
-      return result;
+        rightRotation(leftNode);
+        leftRotation(node);
     }
-  }
+
+    /**
+     * Auxiliary method given a root node, it rotates two positions to the right side
+     *
+     * @param node to rotate. REQUIRES: a call to {@link #rightRotation(AvlNode) and #leftRotation(AvlNode)}
+     */
+    private void doubleRightRotation(AvlNode<T> node) {
+        AvlNode<T> rightNode = node.getRight();
+
+        leftRotation(rightNode);
+        rightRotation(node);
+    }
+
+    /**
+     * This method checks the balance of the subtree.
+     *
+     * @param node the top of the subtree
+     * @return the value representing the balance (-1 if leaning to the left,
+     * +1 if leaning to the right, and 0 if balanced
+     */
+    int getBalance(AvlNode<T> node) {
+        int leftHeight;
+        int rightHeight;
+
+        leftHeight = node.hasLeft() ? node.getLeft().getHeight() : -1;
+        rightHeight = node.hasRight() ? node.getRight().getHeight() : -1;
+
+        return rightHeight - leftHeight;
+    }
+
+    /**
+     * Checking if the avl is empty
+     *
+     * @return true if top is null, false otherwise
+     */
+    public boolean avlIsEmpty() {
+        return top == null;
+    }
+
+    /**
+     * Insert top node
+     *
+     * @param node the node to insert
+     */
+    void insertTop(AvlNode<T> node) {
+        top = node;
+    }
+
+    /**
+     * Get top node
+     *
+     * @return top
+     */
+    public AvlNode<T> getTop() {
+        return top;
+    }
+
+    /**
+     * Set top node
+     *
+     * @param top the node to set as top
+     */
+    private void setTop(AvlNode<T> top) {
+        this.top = top;
+        this.top.setParent(null);
+    }
+
+    /**
+     * Get height of subtree
+     *
+     * @param node the top of the subtree
+     * @return the height if the node is not null, -1 otherwise
+     */
+    int height(AvlNode<T> node) {
+        return node == null ? -1 : node.getHeight();
+    }
+
+    /**
+     * The representation of the tree as a {@link String}
+     *
+     * @return resulting string
+     * @see #inOrder(AvlNode)
+     */
+    public String toString() {
+        return inOrder(top);
+    }
+
+    /**
+     * Auxiliary method to obtain the {@link String} representation of a subtree.
+     *
+     * @param node the top of the subtree
+     * @return the String representation
+     */
+    private String inOrder(AvlNode<T> node) {
+        if (node == null) return "";
+        else {
+            String result = " | " + node.getItem();
+            result += inOrder(node.getLeft());
+            result += inOrder(node.getRight());
+            return result;
+        }
+    }
 }
