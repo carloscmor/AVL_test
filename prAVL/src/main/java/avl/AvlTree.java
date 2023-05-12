@@ -25,16 +25,13 @@ package avl;
 import java.util.Comparator;
 
 /**
- * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:51 Class implementing
- * Avl trees.
- * Refactor made by:
+ * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:51
  *
+ * This class represents a binary AVL tree data structure.
  * @author Carlos Castaño Moreno
  * @author Daniel García Rodríguez
  * @author María Fernández Moreno
  * @author Nuria Rodríguez Tortosa
- * <p>
- * This class represents a binary AVL tree data structure, where s
  */
 @SuppressWarnings("ClassWithTooManyMethods")
 public class AvlTree<T> implements ITree<T> {

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Daniel García Rodríguez
  * @author María Fernández Moreno
  * @author Nuria Rodríguez Tortosa
- * @version 2.0
+ * @version 2.2
  */
 @SuppressWarnings("MagicNumber")
 class AvlTreeTest {
