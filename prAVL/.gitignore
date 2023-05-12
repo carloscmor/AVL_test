@@ -16,6 +16,7 @@ target/
 .idea/encodings.xml
 .idea/misc.xml
 .idea/workspace.xml
+.idea
 
 ### Eclipse ###
 .apt_generated
